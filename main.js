@@ -1,33 +1,25 @@
-var playerPosition = [];
-var enemyPositon = [];
-var playerBullets = [];
-var enemyBullets = [];
+var playerPosition = []; 	// Array of 2 numbers, x and y: [x,y]
+var enemyPositon = [];		// Array of arrays (1 per enemy) of xy pairs: [ [x1,y1],[x2,y2] ]
+var playerBullets = [];		// Array of arrays (1 per enemy) of xy pairs: [ [x1,y1],[x2,y2] ]
+var enemyBullets = [];		// Array of arrays (1 per enemy) of xy pairs: [ [x1,y1],[x2,y2] ]
 
 
-function setup() {
+function setup() {  // p5 function, runs ONCE after everything is loaded.
 
-//        x = width and y = height ;3
+//        x = width and y = height ;3  Top Left corner is [0,0]
 	createCanvas(600,400);
-
-	background(200);
-
-	line(0,0,width,height);
-	playerPosition = [(width/2),(height-50)];
-
-
-
+	playerPosition = [(width/2),(height-50)];	// [x, y]
 }
 
 
 
-function draw() {
+function draw() {	// p5 function, runs REPEATEDLY at the frame rate (30 fps).
 
 	background(0);
-	//movePlayer(-2.5,-1.3);
 	getInput()
-
+	playerBullets = moveBullets(playerBullets,-3.5); 
 	drawPlayer(playerPosition[0],playerPosition[1]);
-	drawPlayer(width/2,height/2);
+	drawBullets(playerBullets,'green');
 	// this mark the screen center
   	stroke(255,0,0)
   	strokeWeight(5);
@@ -50,17 +42,21 @@ function getInput(){
 		dx = dx + speed;
 	}
 	movePlayer(dx,dy);
+
+	if (keyIsDown(32)){
+		playerShoot();
+	}
 }
 
 // player functions 
 
 function drawPlayer(x,y){
-	push();
+	push();	// Saves the current drawing style settings (until pop() below).
 	rectMode(CENTER)
 	fill(0,0,255);
 	noStroke()
 	rect(x,y,20,30);
-	pop();
+	pop(); // Restores the settings before last push()
 
 }
 
@@ -72,7 +68,13 @@ function movePlayer(dx,dy){
 
 }
 
+function playerShoot(){
+	var fireRateDivisor = 20;
+	if( frameCount % fireRateDivisor == 0) {
+		playerBullets = createBullet(playerBullets,playerPosition[0],playerPosition[1]);	
+	}
 
+}
 
 
 
@@ -82,6 +84,44 @@ function movePlayer(dx,dy){
 // enemy functions
 
 // bullet functions
+
+
+function createBullet(bulletArray,x,y){
+	bulletArray.push([x,y]);
+	return bulletArray;
+}
+
+
+function drawBullets(bulletArray,bulletColor){
+	push();
+	stroke(bulletColor)
+  	strokeWeight(5);
+
+  	for (let i = 0;i < bulletArray.length; ++i){
+  		point(bulletArray[i][0],bulletArray[i][1]);
+  	}
+  	pop();
+
+}
+
+
+function moveBullets(bulletArray,dy){
+
+	for (let i=0;i < bulletArray.length;++i){
+		bulletArray[i][1] = bulletArray[i][1] + dy;
+		if (bulletArray[i][1] <= 0){
+			bulletArray.splice(i,1);
+		}
+	}
+	return bulletArray;
+}
+
+
+
+
+
+
+
 
 
 
