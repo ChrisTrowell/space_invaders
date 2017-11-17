@@ -2,7 +2,7 @@ var playerPosition = []; 	// Array of 2 numbers, x and y: [x,y]
 var enemyPositon = [];		// Array of arrays (1 per enemy) of xy pairs: [ [x1,y1],[x2,y2] ]
 var playerBullets = [];		// Array of arrays (1 per enemy) of xy pairs: [ [x1,y1],[x2,y2] ]
 var enemyBullets = [];		// Array of arrays (1 per enemy) of xy pairs: [ [x1,y1],[x2,y2] ]
-
+var lastShotFrame = 0;
 
 function setup() {  // p5 function, runs ONCE after everything is loaded.
 
@@ -69,9 +69,10 @@ function movePlayer(dx,dy){
 }
 
 function playerShoot(){
-	var fireRateDivisor = 20;
-	if( frameCount % fireRateDivisor == 0) {
-		playerBullets = createBullet(playerBullets,playerPosition[0],playerPosition[1]);	
+	var fireRateCooldown = 20;
+	if( frameCount - lastShotFrame >= fireRateCooldown) {
+		playerBullets = createBullet(playerBullets,playerPosition[0],playerPosition[1]);
+		lastShotFrame = frameCount;	
 	}
 
 }
