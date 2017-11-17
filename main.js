@@ -1,7 +1,7 @@
-var playerPosition = []; 	// Array of 2 numbers, x and y: [x,y]
-var enemyPositon = [];		// Array of arrays (1 per enemy) of xy pairs: [ [x1,y1],[x2,y2] ]
-var playerBullets = [];		// Array of arrays (1 per enemy) of xy pairs: [ [x1,y1],[x2,y2] ]
-var enemyBullets = [];		// Array of arrays (1 per enemy) of xy pairs: [ [x1,y1],[x2,y2] ]
+var playerPosition = [];  // Array of 2 numbers, x and y: [x,y]
+var enemyPositon = [];	  // Array of arrays (1 per enemy) of xy pairs: [ [x1,y1],[x2,y2] ]
+var playerBullets = [];	  // Array of arrays (1 per enemy) of xy pairs: [ [x1,y1],[x2,y2] ]
+var enemyBullets = [];	  // Array of arrays (1 per enemy) of xy pairs: [ [x1,y1],[x2,y2] ]
 var lastShotFrame = 0;
 
 function setup() {  // p5 function, runs ONCE after everything is loaded.
@@ -9,15 +9,18 @@ function setup() {  // p5 function, runs ONCE after everything is loaded.
 //        x = width and y = height ;3  Top Left corner is [0,0]
 	createCanvas(600,400);
 	playerPosition = [(width/2),(height-50)];	// [x, y]
+	enemyPositon = initializeEnemies();
 }
 
 
 
 function draw() {	// p5 function, runs REPEATEDLY at the frame rate (30 fps).
 
+
 	background(0);
 	getInput()
 	playerBullets = moveBullets(playerBullets,-3.5); 
+	drawEnemies(enemyPositon);
 	drawPlayer(playerPosition[0],playerPosition[1]);
 	drawBullets(playerBullets,'green');
 	// this mark the screen center
@@ -83,6 +86,33 @@ function playerShoot(){
 
 
 // enemy functions
+
+
+function initializeEnemies() {
+	var enemyArray = [[width/2,100],[width/2,50]]
+	return enemyArray;
+ }
+
+function drawEnemies(enemyArray) {
+	var w=10;
+	var h=20;
+	var x,y;
+	push();
+	stroke(10,60,13);
+	fill(250,0,0);
+	strokeWeight(1);
+
+	for(let i=0;i < enemyArray.length; i++){
+		// rect(enemyArray[i][0],enemyArray[i][1],15,25);
+		x = enemyArray[i][0];
+		y = enemyArray[i][1];
+		triangle(x,y+h/2,x-w/2,y-h/2,x+w/2, y-h/2);
+	}
+
+
+	pop()
+}
+
 
 // bullet functions
 
